@@ -22,7 +22,7 @@ export default class Lexer {
             sentenceCharLength = words.join(" ").length;
         }
 
-        const tokens: Token[] = [];
+        const tokens: {text: string, position: number, characterPosition: number, sentenceTokenLen: number, sentenceCharLen: number, occurrence: number}[] = [];
         let charPos = 0;
         const occurrenceIndex: NumberObject = {};
         for (const word of words) {
@@ -30,14 +30,14 @@ export default class Lexer {
                 occurrenceIndex[word] = 0;
             }
             occurrenceIndex[word] += 1;
-            tokens.push(new Token({
+            tokens.push({
                 text: word,
                 position: tokens.length,
                 characterPosition: charPos,
                 sentenceTokenLen: words.length,
                 sentenceCharLen: sentenceCharLength,
                 occurrence: occurrenceIndex[word]
-            }));
+            });
             charPos += word.length;
         }
 
@@ -45,13 +45,13 @@ export default class Lexer {
         const occurrenceTokens: Token[] = [];
         for (const t of tokens) {
             occurrenceTokens.push(new Token({
-                text: t.toString(),
+                text: t.text,
                 position: t.position,
-                characterPosition: t.charPosition,
-                sentenceTokenLen: t.sentenceTokenLength,
-                sentenceCharLen: t.sentenceCharacterLength,
+                characterPosition: t.characterPosition,
+                sentenceTokenLen: t.sentenceTokenLen,
+                sentenceCharLen: t.sentenceCharLen,
                 occurrence: t.occurrence,
-                occurrences: occurrenceIndex[t.toString()]
+                occurrences: occurrenceIndex[t.text]
             }));
         }
         return occurrenceTokens;
